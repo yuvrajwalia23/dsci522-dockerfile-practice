@@ -1,0 +1,35 @@
+
+# Builds the image from your Dockerfile and publishes it on Docker Hub.
+
+name: Publish image to Docker Hub
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - Dockerfile
+      - uv.lock
+      - renv.lock
+      - .github/workflows/publish-dockerhub.yml
+
+env:
+  IMAGE: ${{ secrets.DOCKER_USERNAME }}/dsci522-dockerfile-practice
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v7
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build the image
+        run: docker build --tag "$IMAGE:latest" --tag "$IMAGE:sha-${GITHUB_SHA::7}" .
+
+      - name: Push the image
+        run: docker push --all-tags "$IMAGE"
