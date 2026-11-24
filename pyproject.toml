@@ -1,0 +1,10 @@
+[project]
+name = "dsci522-dockerfile-practice"
+version = "0.1.0"
+requires-python = ">=3.14"
+dependencies = [
+    "cowsay==6.1",
+    "numpy==2.5.5",
+]
+[tool.uv]
+add-bounds = "exact"
